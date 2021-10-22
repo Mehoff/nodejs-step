@@ -1,47 +1,28 @@
-const http = require("http");
-const ContentTypeMap = require("./helpers/ContentTypeMap");
-const { Route, RoutesHandler } = require("./routeHandler");
+import http from "http";
+import { RoutesHandler } from "./routeHandler.js";
+//import { getBooks } from "./routes/get/books.js";
+//import { getImages } from "./routes/get/images.js";
+
+import { getBooks } from "./routes/get/books.js";
+import { getImages } from "./routes/get/images.js";
 
 const PORT = 3000;
-const Handler = new RoutesHandler();
 
-Handler.addRoute(
-  new Route("GET", "/", null, (req, res) => {
-    res.end("Home sweet home");
-  })
-);
+const router = new RoutesHandler();
 
-Handler.addRoute(
-  new Route("GET", "/hello", null, (req, res) => {
-    res.setHeader("Content-Type", "text/html");
-    res.end("<h1>Hello world!</h1>");
-  })
-);
+router.get("/", (req, res) => {
+  res.end("Home sweet home");
+});
 
-Handler.addRoute(
-  new Route("GET", "/js", null, (req, res) => {
-    res.end("JavaScript is cool!");
-  })
-);
+router.get("/js", (req, res) => {
+  res.end("Javascript is cool!");
+});
 
-Handler.addRoute(new Route("GET", "/addBook", "./html/images.html"));
-
-Handler.addRoute(
-  new Route("GET", "/test", null, (req, res) => {
-    res.end(JSON.stringify({ status: true }));
-  })
-);
-
-Handler.addRoute(
-  new Route("POST", "/addBook", null, (req, res) => {
-    console.log("POST /addBook");
-    res.setHeader("Content-Type", ContentTypeMap.get(".json"));
-    res.end(JSON.stringify({ status: "POST /addBook" }));
-  })
-);
+router.use(getBooks);
+router.use(getImages);
 
 function serverFunction(req, res) {
-  Handler.handle(req, res);
+  router.handle(req, res);
 }
 
 const server = http.createServer(serverFunction);

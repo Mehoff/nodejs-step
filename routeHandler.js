@@ -1,23 +1,41 @@
-const fs = require("fs");
-const ContentTypeMap = require("./helpers/ContentTypeMap");
-const { readHtml } = require("./helpers/ReadFile");
+//const fs = require("fs");
 
-class Route {
-  constructor(method = "GET", url, htmlPath, func) {
+import fs from "fs";
+
+export const ContentTypeMap = new Map([
+  [".html", "text/html; charset=utf-8"],
+  [".css", "text/css; charset=utf-8"],
+  [".js", "text/js; charset=utf-8"],
+  [".json", "application/json"],
+]);
+
+export class Route {
+  constructor(method, url, func) {
     this.method = method;
     this.url = url;
-    this.htmlPath = htmlPath;
     this.func = func;
   }
 
   exec(req, res) {
-    if (this.htmlPath) readHtml(this.htmlPath, req, res);
-    else if (this.func) this.func(req, res);
+    if (this.func) this.func(req, res);
   }
 }
 
-class RoutesHandler {
+export class RoutesHandler {
   routes = [];
+
+  get = (url = "/", func) => this.routes.push(new Route("GET", url, func));
+  post = (url = "/", func) => this.routes.push(new Route("POST", url, func));
+
+  static get = (url = "/", func) => new Route("GET", url, func);
+  static post = (url = "/", func) => new Route("POST", url, func);
+
+  use(route) {
+    if (route.url && route.func) {
+      this.routes.push(route);
+    }
+  }
+
   handle(req, res) {
     const requestedRoute = this.routes.find((route) => {
       return route.url === req.url && route.method === req.method;
@@ -44,10 +62,11 @@ class RoutesHandler {
       requestedRoute.exec(req, res);
     }
   }
-
-  addRoute(route) {
-    this.routes.push(route);
-  }
 }
 
-module.exports = { Route, RoutesHandler };
+// class MyClass {
+//   myProp = [];
+//   foo(){console.log("foo()")}
+// }
+
+//export const Instance = new MyClass();

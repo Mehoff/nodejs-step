@@ -1,7 +1,7 @@
-const fs = require("fs");
-const ContentTypeMap = require("./ContentTypeMap");
+import fs from "fs";
+import { ContentTypeMap } from "../routeHandler.js";
 
-const readHtml = (path, req, res) => {
+export const readHtml = (path, req, res) => {
   if (fs.existsSync(path) && fs.lstatSync(path).isFile()) {
     const readStream = fs.createReadStream(path);
     const ext = path.substring(path.lastIndexOf("."), path.length);
@@ -9,14 +9,22 @@ const readHtml = (path, req, res) => {
     res.setHeader("Content-Type", ContentTypeMap.get(ext));
     readStream.pipe(res);
   } else {
-    fs.readFile("../html/404.html", (err, data) => {
+    fs.readFile("./html/404.html", (err, data) => {
       res.statusCode = 404;
-      err
-        ? res.end("Page does not exist")
-        : (res.setHeader("Content-Type", ContentTypeMap.get(".html")),
-          res.end(data));
+
+      if (err) {
+        console.log(err);
+        res.end("Page does not exist");
+      } else {
+        res.setHeader("Content-Type", ContentTypeMap.get(".html")),
+          res.end(data);
+      }
     });
   }
 };
 
-module.exports = { readHtml };
+export const readFile = (path) => {
+  if (fs.existsSync(path) && fs.lstatSync(path).isFile())
+    return fs.createReadStream(path);
+  else return null;
+};
