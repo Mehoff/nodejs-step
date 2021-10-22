@@ -30,9 +30,11 @@ export class RoutesHandler {
   static get = (url = "/", func) => new Route("GET", url, func);
   static post = (url = "/", func) => new Route("POST", url, func);
 
-  use(route) {
-    if (route.url && route.func) {
-      this.routes.push(route);
+  use(...routes) {
+    for (const route of routes) {
+      if (route.url && route.func) {
+        this.routes.push(route);
+      }
     }
   }
 
@@ -63,10 +65,3 @@ export class RoutesHandler {
     }
   }
 }
-
-// class MyClass {
-//   myProp = [];
-//   foo(){console.log("foo()")}
-// }
-
-//export const Instance = new MyClass();

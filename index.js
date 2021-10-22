@@ -1,25 +1,13 @@
 import http from "http";
 import { RoutesHandler } from "./routeHandler.js";
-//import { getBooks } from "./routes/get/books.js";
-//import { getImages } from "./routes/get/images.js";
-
-import { getBooks } from "./routes/get/books.js";
-import { getImages } from "./routes/get/images.js";
+import { getBooks, postBooks } from "./routes/books.js";
+import { getHome } from "./routes/home.js";
 
 const PORT = 3000;
 
 const router = new RoutesHandler();
 
-router.get("/", (req, res) => {
-  res.end("Home sweet home");
-});
-
-router.get("/js", (req, res) => {
-  res.end("Javascript is cool!");
-});
-
-router.use(getBooks);
-router.use(getImages);
+router.use(getHome, getBooks, postBooks);
 
 function serverFunction(req, res) {
   router.handle(req, res);
