@@ -19,5 +19,6 @@
   "homepage": "https://github.com/Mehoff/nodejs-step#readme",
   "devDependencies": {
     "nodemon": "^2.0.14"
-  }
+  },
+  "type": "module"
 }
