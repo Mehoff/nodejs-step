@@ -1,13 +1,5 @@
-//const fs = require("fs");
-
 import fs from "fs";
-
-export const ContentTypeMap = new Map([
-  [".html", "text/html; charset=utf-8"],
-  [".css", "text/css; charset=utf-8"],
-  [".js", "text/js; charset=utf-8"],
-  [".json", "application/json"],
-]);
+import { ContentTypeMap } from "./helpers/ContentTypeMap.js";
 
 export class Route {
   constructor(method, url, func) {

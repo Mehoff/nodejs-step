@@ -1,5 +1,5 @@
 import fs from "fs";
-import { ContentTypeMap } from "../routeHandler.js";
+import { ContentTypeMap } from "./ContentTypeMap.js";
 
 export const readHtml = (path, req, res) => {
   if (fs.existsSync(path) && fs.lstatSync(path).isFile()) {
