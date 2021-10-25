@@ -15,3 +15,8 @@ textarea {
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
+
+#action-toggler{
+  cursor: pointer;
+  text-decoration: underline;
+}
