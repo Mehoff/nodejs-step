@@ -10,7 +10,7 @@ document.addEventListener("submit", (e) => {
   const setValues = (name = "", description = "", path) => {
     bookNameElement.textContent = name;
     bookDescriptionElement.textContent = description;
-    bookImageElement.src = path;
+    bookImageElement.src = "..\\" + path;
   };
 
   // Data validation

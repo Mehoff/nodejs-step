@@ -1,6 +1,7 @@
 import { RoutesHandler } from "../routeHandler.js";
 import { readHtml } from "../helpers/ReadFile.js";
 import multiparty from "multiparty";
+import { Book, BookSchema } from "../db/schemas/BookSchema.js";
 
 export const postBooks = RoutesHandler.post("/books", (req, res) => {
   let response = {};
@@ -20,7 +21,15 @@ export const postBooks = RoutesHandler.post("/books", (req, res) => {
     response[name] = value;
   });
 
-  form.on("close", () => {
+  form.on("close", async () => {
+    const book = new Book();
+
+    book.title = response.name;
+    book.description = response.description;
+    book.path = response.imagePath;
+
+    await book.save();
+
     res.end(JSON.stringify(response));
   });
 
