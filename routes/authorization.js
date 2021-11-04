@@ -1,7 +1,8 @@
 import { RoutesHandler } from "../routeHandler.js";
 import { readHtml } from "../helpers/ReadFile.js";
 import multiparty from "multiparty";
-import Db from "../configs/users.json";
+import { User } from "../db/schemas/UserSchema.js";
+import { encrypt, compare } from "../helpers/bcrypt.js";
 
 export const postAuth = RoutesHandler.post("/authorization", (req, res) => {
   const form = new multiparty.Form();
@@ -12,29 +13,38 @@ export const postAuth = RoutesHandler.post("/authorization", (req, res) => {
     data[name] = value;
   });
 
-  form.on("close", () => {
+  form.on("close", async () => {
     if (
-      !data["login"] ||
+      !data["email"] ||
       !data["password"] ||
       typeof data["isLogin"] === "undefined"
     ) {
-      res.end(JSON.stringify({ error: "Bad authorization data" }));
-      return;
+      return res.end(JSON.stringify({ error: "Bad authorization data" }));
     }
     switch (data["isLogin"]) {
       case "true":
-        const user = Db.users.find(
-          (user) =>
-            user.login === data["login"] && user.password === data["password"]
-        );
-        user
-          ? res.end(JSON.stringify(user))
-          : res.end(JSON.stringify({ error: "User was not found" }));
-        break;
+        const user = await User.find({ email: data["email"] });
+
+        if (!user || !(await compare(user.password, data["password"]))) {
+          return res.end(
+            JSON.stringify({
+              error: "Failed to log in, check your credentials and try again",
+            })
+          );
+        }
+
+        return res.end(JSON.stringify(user));
       case "false":
-        const newUser = { login: data["login"], password: data["password"] };
-        Db.users.push(newUser);
-        res.end(JSON.stringify(newUser));
+        if (data["name"].length < 2)
+          return res.end(JSON.stringify({ error: "Bad authorization data" }));
+
+        const password = await encrypt(data["password"]);
+        const newUser = { email: data["email"], password, name: data["name"] };
+
+        User.create(newUser).then((r) => {
+          return res.end(JSON.stringify(r));
+        });
+
         break;
       default:
         res.end(JSON.stringify({ error: "Unexpected error had happened" }));

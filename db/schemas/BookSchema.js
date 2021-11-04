@@ -5,7 +5,7 @@ export const BookSchema = new mongoose.Schema({
   description: { type: String, required: true },
   path: { type: String, required: true },
   uploadedAt: { type: Number, default: Date.now() },
-  deleted: { type: Boolean, default: false },
+  deleted: { type: Boolean, default: false, select: false },
 });
 
 export const Book = mongoose.model("book", BookSchema);

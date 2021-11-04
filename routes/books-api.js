@@ -1,18 +1,14 @@
 import { RoutesHandler } from "../routeHandler.js";
 import mongoose from "mongoose";
+import { Book } from "../db/schemas/BookSchema.js";
 
-export const getBooksApi = RoutesHandler.get("./books-api", (req, res) => {
+export const getBooksApi = RoutesHandler.get("/books-api", async (req, res) => {
   // TODO: add query and params support for RoutesHandler, and filter results in this route function
+  const books = await Book.find({ deleted: false });
 
-  mongoose.connection.db.collection("books", (err, collection) => {
-    if (err) {
-      return res.end({ error: "Failed to get collection", message: err });
-    }
-    collection.find({}).toArray((err, data) => {
-      if (err) {
-        return res.end({ error: "Failed to get collection", message: err });
-      }
-      return res.end(JSON.stringify(data));
-    });
-  });
+  if (!books.length) {
+    return res.end(JSON.stringify({ error: "Failed to load books" }));
+  }
+
+  return res.end(JSON.stringify(books));
 });

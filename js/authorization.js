@@ -3,12 +3,17 @@ let isLogIn = true;
 const form = document.querySelector("form");
 const actionToggler = document.querySelector("#action-toggler");
 const authHeaderElement = document.querySelector("#authorization-header");
-const loginElement = document.querySelector("#login");
+const emailElement = document.querySelector("#email");
 const passwordElement = document.querySelector("#password");
+
 const confirmPasswordElement = document.querySelector("#confirm-password");
 const confirmPasswordWrapperElement = document.querySelector(
   "#confirm-password-wrapper"
 );
+
+const nameElement = document.querySelector("#name");
+const nameWrapperElement = document.querySelector("#name-wrapper");
+
 const submitElement = document.querySelector("#submit-button");
 
 const formData = new FormData();
@@ -29,7 +34,7 @@ document.addEventListener("submit", (e) => {
         alert(res.error);
         return;
       }
-      alert(`Добро пожаловать, ${res.login}`);
+      alert(`Добро пожаловать, ${res.name}`);
     });
 });
 
@@ -39,18 +44,20 @@ actionToggler.addEventListener("click", (e) => {
       (authHeaderElement.textContent = "Регистрация"),
       (actionToggler.textContent = "Вход"),
       (submitElement.value = "Зарегистрироваться"),
+      nameWrapperElement.classList.remove("invisible"),
       (isLogIn = false))
     : (confirmPasswordWrapperElement.classList.add("invisible"),
       (authHeaderElement.textContent = "Вход"),
       (actionToggler.textContent = "Регистрация"),
       (submitElement.value = "Войти"),
-      (isLogIn = true));
+      nameWrapperElement.classList.add("invisible")((isLogIn = true)));
 });
 
 const createBody = () => {
-  const login = loginElement.value.trim();
+  const email = emailElement.value.trim();
   const password = passwordElement.value.trim();
   const confirmation = confirmPasswordElement.value.trim();
+  const name = nameElement.value.trim();
 
   if (!isLogIn) {
     if (password !== confirmation) {
@@ -60,7 +67,8 @@ const createBody = () => {
   }
 
   formData.append("isLogin", isLogIn);
-  formData.append("login", login);
+  formData.append("email", email);
   formData.append("password", password);
+  formData.append("name", name);
   return true;
 };
