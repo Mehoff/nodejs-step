@@ -10,7 +10,7 @@ import { getBooks, postBooks } from "./routes/books.js";
 import { getHome } from "./routes/home.js";
 import { postAuth, getAuth } from "./routes/authorization.js";
 import { getBooksForm } from "./routes/book-form.js";
-import { getBooksApi } from "./routes/books-api.js";
+import { getBooksApi, deleteBooksApi } from "./routes/books-api.js";
 
 const dotenvResult = dotenv.config();
 
@@ -20,7 +20,9 @@ if (dotenvResult.error) {
 }
 
 const router = new RoutesHandler();
-const reInitializeDatabase = false;
+
+// Для генерации данных перед их тестированием, установить в true
+const reInitializeDatabase = true;
 
 // Use these routes
 router.use(
@@ -30,7 +32,8 @@ router.use(
   postAuth,
   getAuth,
   getBooksForm,
-  getBooksApi
+  getBooksApi,
+  deleteBooksApi
 );
 
 function serverFunction(req, res) {

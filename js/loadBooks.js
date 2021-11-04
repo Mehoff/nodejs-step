@@ -5,8 +5,6 @@ document.addEventListener("DOMContentLoaded", async (e) => {
     r.json()
   );
 
-  console.log("GET: /books-api", books);
-
   let row = createElement("row d-flex-row");
 
   for (let i = 0; i < books.length; i++) {
@@ -53,6 +51,9 @@ const createBookElement = (book) => {
 
   const buttonDel = createButton("Удалить", "link-secondary", () => {
     console.log("Удалить" + book._id);
+
+    if (confirm(`Вы уверены что хотите удалить ${book.title}?`))
+      deleteBook(book._id);
   });
   const buttonEdit = createButton("Редактировать", "link-primary", () => {
     console.log("Редактировать" + book._id);
@@ -76,3 +77,36 @@ const createBookElement = (book) => {
 
   return div;
 };
+
+const deleteBook = async (bookId) => {
+  const raw = await fetch("/books-api", {
+    method: "DELETE",
+    body: JSON.stringify({ bookId }),
+  });
+
+  const response = await raw.json();
+
+  if (response) {
+    if (response.error) {
+      alert(response.error);
+    }
+    location.reload();
+  } else {
+    alert("Response is undefined");
+    console.log(response);
+  }
+};
+
+// const deleteBook = (bookId) => {
+//   fetch("/books-api", { method: "DELETE", body: JSON.stringify({ bookId }) })
+//     .then((r) => {
+//       r.json();
+//     })
+//     .then((d) => {
+//       if (d.error) {
+//         alert(d.error);
+//         return;
+//       }
+//       location.reload();
+//     });
+// };

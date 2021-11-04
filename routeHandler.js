@@ -18,9 +18,12 @@ export class RoutesHandler {
 
   get = (url = "/", func) => this.routes.push(new Route("GET", url, func));
   post = (url = "/", func) => this.routes.push(new Route("POST", url, func));
+  delete = (url = "/", func) =>
+    this.routes.push(new Route("DELETE", url, func));
 
   static get = (url = "/", func) => new Route("GET", url, func);
   static post = (url = "/", func) => new Route("POST", url, func);
+  static delete = (url = "/", func) => new Route("DELETE", url, func);
 
   use(...routes) {
     for (const route of routes) {
