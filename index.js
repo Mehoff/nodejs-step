@@ -2,6 +2,9 @@ import http from "http";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
+import { clearDatabaseData, fillDatabaseWithFixtures } from "./db/db.js";
+
+// Routes
 import { RoutesHandler } from "./routeHandler.js";
 import { getBooks, postBooks } from "./routes/books.js";
 import { getHome } from "./routes/home.js";
@@ -35,18 +38,20 @@ function serverFunction(req, res) {
 
 const server = http.createServer(serverFunction);
 
-mongoose.connect(process.env.MONGO_CONNECTION_STRING, (err) => {
+mongoose.connect(process.env.MONGO_CONNECTION_STRING, async (err) => {
   if (err) {
     console.error("MongoDB connection error", err.message);
     return;
   }
 
-  server.listen(process.env.APP_PORT, () => {
+  server.listen(process.env.APP_PORT, async () => {
     console.log(`Listening on port: ${process.env.APP_PORT}`);
+
+    await clearDatabaseData();
+    await fillDatabaseWithFixtures();
   });
 });
 
-// If the Node process ends, close the Mongoose connection
 process.on("SIGINT", () => {
   mongoose.connection.close(() => {
     console.log(
