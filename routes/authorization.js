@@ -2,7 +2,7 @@ import { RoutesHandler } from "../routeHandler.js";
 import { readHtml } from "../helpers/ReadFile.js";
 import multiparty from "multiparty";
 import { User } from "../db/schemas/UserSchema.js";
-import { encrypt, compare } from "../helpers/bcrypt.js";
+import { encrypt, compareSync } from "../helpers/bcrypt.js";
 
 export const postAuth = RoutesHandler.post("/authorization", (req, res) => {
   const form = new multiparty.Form();
@@ -23,9 +23,9 @@ export const postAuth = RoutesHandler.post("/authorization", (req, res) => {
     }
     switch (data["isLogin"]) {
       case "true":
-        const user = await User.find({ email: data["email"] });
+        const user = await User.findOne({ email: data["email"] });
 
-        if (!user || !(await compare(user.password, data["password"]))) {
+        if (!user || !compareSync(data["password"], user.password)) {
           return res.end(
             JSON.stringify({
               error: "Failed to log in, check your credentials and try again",

@@ -20,6 +20,7 @@ if (dotenvResult.error) {
 }
 
 const router = new RoutesHandler();
+const reInitializeDatabase = false;
 
 // Use these routes
 router.use(
@@ -47,8 +48,10 @@ mongoose.connect(process.env.MONGO_CONNECTION_STRING, async (err) => {
   server.listen(process.env.APP_PORT, async () => {
     console.log(`Listening on port: ${process.env.APP_PORT}`);
 
-    await clearDatabaseData();
-    await fillDatabaseWithFixtures();
+    if (reInitializeDatabase) {
+      await clearDatabaseData();
+      await fillDatabaseWithFixtures();
+    }
   });
 });
 
