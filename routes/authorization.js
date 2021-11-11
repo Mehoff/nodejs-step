@@ -4,10 +4,11 @@ import multiparty from "multiparty";
 import { User } from "../db/schemas/UserSchema.js";
 import { encrypt, compareSync } from "../services/bcrypt.js";
 import { createJwt } from "../services/jwt.js";
+import { ensureNotAuthenticated } from "../middleware/ensureNotAuthenticated.js";
 
 export const postAuth = RoutesHandler.post(
   "/authorization",
-  null,
+  [ensureNotAuthenticated],
   (req, res) => {
     const form = new multiparty.Form();
 
@@ -79,6 +80,10 @@ export const postAuth = RoutesHandler.post(
   }
 );
 
-export const getAuth = RoutesHandler.get("/authorization", null, (req, res) => {
-  readHtml("./html/authorization.html", req, res);
-});
+export const getAuth = RoutesHandler.get(
+  "/authorization",
+  [ensureNotAuthenticated],
+  (req, res) => {
+    readHtml("./html/authorization.html", req, res);
+  }
+);

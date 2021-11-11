@@ -37,6 +37,7 @@ document.addEventListener("submit", (e) => {
 
       console.log(res);
       alert(`Добро пожаловать, ${res.name}`);
+      window.location = "/";
     });
 });
 
