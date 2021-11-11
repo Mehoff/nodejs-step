@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { Book } from "../db/schemas/BookSchema.js";
 import { User } from "../db/schemas/UserSchema.js";
-import { encryptSync } from "../helpers/bcrypt.js";
+import { encryptSync } from "../services/bcrypt.js";
 
 export const clearDatabaseData = async () => {
   const collections = mongoose.connection.collections;

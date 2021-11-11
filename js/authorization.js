@@ -34,6 +34,8 @@ document.addEventListener("submit", (e) => {
         alert(res.error);
         return;
       }
+
+      console.log(res);
       alert(`Добро пожаловать, ${res.name}`);
     });
 });

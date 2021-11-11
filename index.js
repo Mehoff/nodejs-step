@@ -66,3 +66,16 @@ process.on("SIGINT", () => {
     process.exit(0);
   });
 });
+
+//    TODO:
+
+// Add user jwt authentication
+// Add route middleware support
+// Add ensureAuthenticated middleware
+// Add 'author' field in book schema
+// Add <select> too books.html, and option 'deleted'
+// Add button to 'undo deletion' for deleted books
+// Save data about user log in timestamp
+// Logout button
+// Pagination
+// Likes/Dislikes
