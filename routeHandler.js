@@ -2,13 +2,25 @@ import fs from "fs";
 import { ContentTypeMap } from "./helpers/ContentTypeMap.js";
 
 export class Route {
-  constructor(method, url, func) {
+  constructor(method, url, middleware, func) {
     this.method = method;
     this.url = url;
     this.func = func;
+    this.middleware = [];
+
+    if (middleware && middleware.length > 0) {
+      this.middleware = middleware;
+    }
   }
 
   exec(req, res) {
+    if (this.middleware) {
+      for (const m of this.middleware) {
+        const r = m(req, res);
+        if (!r) return;
+      }
+    }
+
     if (this.func) this.func(req, res);
   }
 }
@@ -16,14 +28,19 @@ export class Route {
 export class RoutesHandler {
   routes = [];
 
-  get = (url = "/", func) => this.routes.push(new Route("GET", url, func));
-  post = (url = "/", func) => this.routes.push(new Route("POST", url, func));
-  delete = (url = "/", func) =>
-    this.routes.push(new Route("DELETE", url, func));
+  get = (url = "/", middleware, func) =>
+    this.routes.push(new Route("GET", url, middleware, func));
+  post = (url = "/", middleware, func) =>
+    this.routes.push(new Route("POST", url, middleware, func));
+  delete = (url = "/", middleware, func) =>
+    this.routes.push(new Route("DELETE", url, middleware, func));
 
-  static get = (url = "/", func) => new Route("GET", url, func);
-  static post = (url = "/", func) => new Route("POST", url, func);
-  static delete = (url = "/", func) => new Route("DELETE", url, func);
+  static get = (url = "/", middleware = [], func) =>
+    new Route("GET", url, middleware, func);
+  static post = (url = "/", middleware = [], func) =>
+    new Route("POST", url, middleware, func);
+  static delete = (url = "/", middleware = [], func) =>
+    new Route("DELETE", url, middleware, func);
 
   use(...routes) {
     for (const route of routes) {

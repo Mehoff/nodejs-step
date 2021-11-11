@@ -11,6 +11,7 @@ import { getHome } from "./routes/home.js";
 import { postAuth, getAuth } from "./routes/authorization.js";
 import { getBooksForm } from "./routes/book-form.js";
 import { getBooksApi, deleteBooksApi } from "./routes/books-api.js";
+import { getPrivate } from "./routes/private.js";
 
 const dotenvResult = dotenv.config();
 
@@ -33,7 +34,8 @@ router.use(
   getAuth,
   getBooksForm,
   getBooksApi,
-  deleteBooksApi
+  deleteBooksApi,
+  getPrivate
 );
 
 function serverFunction(req, res) {

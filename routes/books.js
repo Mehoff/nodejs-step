@@ -1,9 +1,9 @@
 import { RoutesHandler } from "../routeHandler.js";
 import { readHtml } from "../helpers/ReadFile.js";
 import multiparty from "multiparty";
-import { Book, BookSchema } from "../db/schemas/BookSchema.js";
+import { Book } from "../db/schemas/BookSchema.js";
 
-export const postBooks = RoutesHandler.post("/books", (req, res) => {
+export const postBooks = RoutesHandler.post("/books", null, (req, res) => {
   let response = {};
   // Saving image to /uploads
   const form = new multiparty.Form({ uploadDir: "./uploads" });
@@ -36,6 +36,6 @@ export const postBooks = RoutesHandler.post("/books", (req, res) => {
   form.parse(req);
 });
 
-export const getBooks = RoutesHandler.get("/books", (req, res) => {
+export const getBooks = RoutesHandler.get("/books", null, (req, res) => {
   readHtml("./html/books.html", req, res);
 });
