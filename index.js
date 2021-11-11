@@ -10,7 +10,13 @@ import { getBooks, postBooks } from "./routes/books.js";
 import { getHome } from "./routes/home.js";
 import { postAuth, getAuth } from "./routes/authorization.js";
 import { getBooksForm } from "./routes/book-form.js";
-import { getBooksApi, deleteBooksApi } from "./routes/books-api.js";
+import {
+  getBooksApi,
+  getAllBooksApi,
+  getOwnBooksApi,
+  getDeletedBooksApi,
+  deleteBooksApi,
+} from "./routes/books-api.js";
 import { getPrivate } from "./routes/private.js";
 
 const dotenvResult = dotenv.config();
@@ -34,6 +40,9 @@ router.use(
   getAuth,
   getBooksForm,
   getBooksApi,
+  getAllBooksApi,
+  getOwnBooksApi,
+  getDeletedBooksApi,
   deleteBooksApi,
   getPrivate
 );
@@ -71,13 +80,16 @@ process.on("SIGINT", () => {
 
 //    TODO:
 
-// Add user jwt authentication
-// Add route middleware support
-// Add ensureAuthenticated middleware
-// Add 'author' field in book schema
-// Add <select> too books.html, and option 'deleted'
+// Add user jwt authentication +
+// Add route middleware support +
+// Add ensureAuthenticated middleware +
+// Add 'author' field in book schema +
+// Add <select> too books.html, and option 'deleted' +
 // Add button to 'undo deletion' for deleted books
-// Save data about user log in timestamp
+// Save data about user log in timestamp +
 // Logout button
 // Pagination
 // Likes/Dislikes
+
+//    May be cool thing TODO:
+// req.user

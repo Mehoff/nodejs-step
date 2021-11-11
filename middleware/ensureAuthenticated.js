@@ -8,12 +8,12 @@ export const ensureAuthenticated = (req, res) => {
     if (id.error) {
       console.error("ensureAuthenticated.error", id.error);
       res.writeHead(403, "Not authenticated");
-      res.end("Failed to verify your identity");
+      res.end({ error: "Failed to verify your identity" });
       return false;
     }
     return true;
   }
   res.writeHead(403, "Not authenticated");
-  res.end("Not authenticated");
+  res.end(JSON.stringify({ error: "Not authenticated" }));
   return false;
 };

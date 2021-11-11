@@ -1,9 +1,31 @@
-document.addEventListener("DOMContentLoaded", async (e) => {
-  const booksElement = document.querySelector("#books-list");
+const filter = document.querySelector("#filter");
 
-  const books = await fetch("/books-api", { method: "GET" }).then((r) =>
-    r.json()
-  );
+filter.addEventListener("change", (e) => {
+  //all, own, deleted
+  const option = e.target.value;
+
+  if (!option) option = "all";
+
+  fillBooksByOption(option);
+});
+
+function fillBooksByOption(option) {
+  fetch(`/books-api/${option}`, {
+    method: "GET",
+  })
+    .then((r) => r.json())
+    .then((books) => {
+      clearContainer();
+      if (books.error) {
+        alert("Для того чтобы получить доступ к своим книгам - авторизуйтесь");
+        return;
+      }
+      fillContainer(books);
+    });
+}
+
+function fillContainer(books) {
+  const booksElement = document.querySelector("#books-list");
 
   let row = createElement("row d-flex-row");
 
@@ -16,6 +38,10 @@ document.addEventListener("DOMContentLoaded", async (e) => {
   }
 
   if (row.hasChildNodes()) booksElement.appendChild(row);
+}
+
+document.addEventListener("DOMContentLoaded", async (e) => {
+  fillBooksByOption("all");
 });
 
 const createElement = (className = "") => {
@@ -97,16 +123,7 @@ const deleteBook = async (bookId) => {
   }
 };
 
-// const deleteBook = (bookId) => {
-//   fetch("/books-api", { method: "DELETE", body: JSON.stringify({ bookId }) })
-//     .then((r) => {
-//       r.json();
-//     })
-//     .then((d) => {
-//       if (d.error) {
-//         alert(d.error);
-//         return;
-//       }
-//       location.reload();
-//     });
-// };
+const clearContainer = () => {
+  const booksElement = document.querySelector("#books-list");
+  booksElement.innerHTML = "";
+};

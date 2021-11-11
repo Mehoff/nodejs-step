@@ -12,6 +12,31 @@ export const clearDatabaseData = async () => {
 };
 
 export const fillDatabaseWithFixtures = async () => {
+  const IlliaId = mongoose.Types.ObjectId("123123123123");
+  const MaxId = mongoose.Types.ObjectId("213213213213");
+  const MatveyId = mongoose.Types.ObjectId("321321321321");
+
+  const userData = [
+    {
+      _id: IlliaId,
+      name: "Illya Mikhow",
+      email: "mixov2000@gmail.com",
+      password: encryptSync("qwerty123"),
+    },
+    {
+      _id: MaxId,
+      name: "Max Dmitriev",
+      email: "itmaxxx@gmail.com",
+      password: encryptSync("qwerty123"),
+    },
+    {
+      _id: MatveyId,
+      name: "Matvey Gorelik",
+      email: "offiza@sobaka.com",
+      password: encryptSync("qwerty123"),
+    },
+  ];
+
   const bookData = [
     {
       title: "Каштанка",
@@ -28,29 +53,24 @@ export const fillDatabaseWithFixtures = async () => {
       description: "Снова она же..",
       path: "uploads\\kashtanka.jpg",
     },
-  ];
-
-  const userData = [
     {
-      name: "Illya Mikhow",
-      email: "mixov2000@gmail.com",
-      password: encryptSync("qwerty123"),
+      title: "Каштанка Макса",
+      description: "Каштанка которую добавил Макс",
+      author: MaxId,
+      path: "uploads\\kashtanka.jpg",
     },
     {
-      name: "Max Dmitriev",
-      email: "itmaxxx@gmail.com",
-      password: encryptSync("qwerty123"),
-    },
-    {
-      name: "Matvey Gorelik",
-      email: "offiza@sobaka.com",
-      password: encryptSync("qwerty123"),
+      title: "Удаленная Каштанка Матвея",
+      description: "Каштанка которую добавил Матвей, а потом удалил",
+      author: MatveyId,
+      path: "uploads\\kashtanka.jpg",
+      deleted: true,
     },
   ];
 
   try {
-    await Book.insertMany(bookData);
     await User.insertMany(userData);
+    await Book.insertMany(bookData);
 
     console.log("DB succesfully filled with data");
   } catch (err) {

@@ -63,6 +63,9 @@ document.addEventListener("submit", (e) => {
   formData.append("description", inputData.description);
   formData.append("picture", inputData.picture);
 
+  // Add user id
+  //formData.append("user")
+
   // set image original name to front-end
   bookImageNameElement.textContent = picturesElement.files[0].name;
 
