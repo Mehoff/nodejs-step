@@ -10,34 +10,42 @@
 </head>
 <body>
     <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/"><b>THE</b>LIBRARY</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                  <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/books">Books</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="/authorization">Authorization</a>
-                </li>
-                <li class="nav-item">
-                  <button
-                    id="logout"
-                    style="cursor: pointer; border: none"
-                    class="nav-link"
-                  >
-                    Log out
-                  </button>
-                </li>
-              </ul>
-            </div>
-        </nav>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/"><b>THE</b>LIBRARY</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul id="navbar" class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/books">Books</a>
+            </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link" href="/authorization">Authorization</a>
+            </li>
+            <li class="nav-item">
+              <button
+                id="logout"
+                style="cursor: pointer; border: none"
+                class="nav-link"
+              >
+                Log out
+              </button> 
+            </li> -->
+          </ul>
+        </div>
+      </nav>
 
         <div class="container-sm">
           <h1 id="authorization-header" class="text-center">Вход</h1>
@@ -66,6 +74,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script src="/js/authorization.js"></script>
+<script src="../js/navbar.js"></script>
 <script src="../js/logout.js"></script>
 </body>
 </html>

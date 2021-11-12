@@ -87,6 +87,7 @@ process.on("SIGINT", () => {
 // Add <select> too books.html, and option 'deleted' +
 // Add button to 'undo deletion' for deleted books
 // Save data about user log in timestamp +
+// Navbar +
 // Logout button
 // Pagination
 // Likes/Dislikes
