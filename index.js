@@ -89,12 +89,14 @@ process.on("SIGINT", () => {
 // Add ensureAuthenticated middleware +
 // Add 'author' field in book schema +
 // Add <select> too books.html, and option 'deleted' +
-// Add button to 'undo deletion' for deleted books
+// Add button to 'undo deletion' for deleted books +
 // Save data about user log in timestamp +
 // Navbar +
 // Logout button +
+// Edit
 // Pagination
 // Likes/Dislikes
+// Comments
 
 //    May be cool thing TODO:
 // req.user

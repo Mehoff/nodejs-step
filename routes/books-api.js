@@ -7,33 +7,87 @@ import { getCurrentUser } from "../helpers/CurrentUser.js";
 // TODO: add query and params support for RoutesHandler, and filter results in this route function
 //
 
-export const getBooksApi = RoutesHandler.get(
+const BOOKS_PER_PAGE = 3;
+
+export const getBooksApi = RoutesHandler.post(
   "/books-api",
   null,
   async (req, res) => {
-    const books = await Book.find({ deleted: false });
+    let data = "";
 
-    if (!books.length) {
-      return res.end(JSON.stringify({ error: "Failed to load books" }));
-    }
+    req.on("data", (chunk) => {
+      data += chunk;
+    });
 
-    return res.end(JSON.stringify(books));
+    req.on("end", async () => {
+      const page = JSON.parse(data).page;
+
+      console.log("PAGE: " + page);
+
+      const toSkip = BOOKS_PER_PAGE * (page - 1);
+
+      console.log("ToSkip: " + toSkip);
+
+      const books = await Book.find({ deleted: false })
+        .skip(toSkip)
+        .limit(BOOKS_PER_PAGE)
+        .sort("-uploadedAt");
+
+      if (!books.length)
+        return res.end(JSON.stringify({ error: "Failed to load books" }));
+
+      return res.end(JSON.stringify(books));
+    });
+
+    // const books = await Book.find({ deleted: false });
+
+    // if (!books.length) {
+    //   return res.end(JSON.stringify({ error: "Failed to load books" }));
+    // }
+
+    // return res.end(JSON.stringify(books));
   }
 );
 
 // Literally COPY of top route. TODO: Delete top route, implement params for routes, and clear this up!
 
-export const getAllBooksApi = RoutesHandler.get(
+export const getAllBooksApi = RoutesHandler.post(
   "/books-api/all",
   null,
   async (req, res) => {
-    const books = await Book.find({ deleted: false });
+    let data = "";
 
-    if (!books.length) {
-      return res.end(JSON.stringify({ error: "Failed to load books" }));
-    }
+    req.on("data", (chunk) => {
+      data += chunk;
+    });
 
-    return res.end(JSON.stringify(books));
+    req.on("end", async () => {
+      const page = JSON.parse(data).page;
+
+      console.log("PAGE: " + page);
+
+      const toSkip = BOOKS_PER_PAGE * (page - 1);
+
+      console.log("ToSkip: " + toSkip);
+
+      const books = await Book.find({ deleted: false })
+        .skip(toSkip)
+        .limit(BOOKS_PER_PAGE)
+        .sort("-uploadedAt");
+
+      if (!books.length)
+        return res.end(JSON.stringify({ error: "Failed to load books" }));
+
+      return res.end(JSON.stringify(books));
+    });
+
+    // const books = await Book.find({ deleted: false });
+
+    // if (!books.length) {
+    //   return res.end(JSON.stringify({ error: "Failed to load books" }));
+    // }
+
+    // return res.end(JSON.stringify(books));
   }
 );
 

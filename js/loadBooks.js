@@ -1,5 +1,32 @@
 const filter = document.querySelector("#filter");
 let option = "all";
+let page = 1;
+
+const buttonPrevPageElement = document.querySelector("#pagePrev");
+const buttonNextPageElement = document.querySelector("#pageNext");
+const pageNumElement = document.querySelector("#pageNum");
+
+buttonPrevPageElement.addEventListener("click", (e) => {
+  if (page == 1) return;
+
+  page -= 1;
+
+  setCurrentPageText();
+  fillBooksByOption(option);
+});
+
+buttonNextPageElement.addEventListener("click", (e) => {
+  // Todo, limit next page
+
+  page += 1;
+
+  setCurrentPageText();
+  fillBooksByOption(option);
+});
+
+function setCurrentPageText() {
+  pageNumElement.textContent = page;
+}
 
 filter.addEventListener("change", (e) => {
   //all, own, deleted
@@ -12,7 +39,8 @@ filter.addEventListener("change", (e) => {
 
 function fillBooksByOption(option) {
   fetch(`/books-api/${option}`, {
-    method: "GET",
+    method: "POST",
+    body: JSON.stringify({ page }),
   })
     .then((r) => r.json())
     .then((books) => {
