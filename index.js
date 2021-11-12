@@ -18,6 +18,7 @@ import {
   deleteBooksApi,
 } from "./routes/books-api.js";
 import { getPrivate } from "./routes/private.js";
+import { getLogout } from "./routes/logout.js";
 
 const dotenvResult = dotenv.config();
 
@@ -44,7 +45,8 @@ router.use(
   getOwnBooksApi,
   getDeletedBooksApi,
   deleteBooksApi,
-  getPrivate
+  getPrivate,
+  getLogout
 );
 
 function serverFunction(req, res) {

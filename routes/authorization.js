@@ -45,7 +45,7 @@ export const postAuth = RoutesHandler.post(
 
           const jwt = createJwt(user._id);
           res.writeHead(200, {
-            "Set-Cookie": `jwt=${jwt}`,
+            "Set-Cookie": `jwt=${jwt};max-age=999999`,
             "Content-Type": "text/plain",
           });
           return res.end(JSON.stringify(user));
@@ -64,7 +64,7 @@ export const postAuth = RoutesHandler.post(
           User.create(newUser).then((u) => {
             const jwt = createJwt(u._id);
             res.writeHead(200, {
-              "Set-Cookie": `jwt=${jwt}`,
+              "Set-Cookie": `jwt=${jwt};max-age=999999`,
               "Content-Type": "text/plain",
             });
             return res.end(JSON.stringify(u));

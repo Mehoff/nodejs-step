@@ -7,8 +7,12 @@ if (getCookies()["jwt"]) {
       fetch("/logout", { method: "GET" })
         .then((r) => r.json())
         .then((data) => {
-          if (!data.error) {
-            window.location = "/";
+          if (data.status === "OK") {
+            if (data.redirect) {
+              window.location = data.redirect;
+            }
+          } else if (data.error) {
+            alert(data.error);
           }
         });
     }

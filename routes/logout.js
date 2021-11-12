@@ -5,15 +5,10 @@ export const getLogout = RoutesHandler.get(
   "/logout",
   [ensureAuthenticated],
   (req, res) => {
-    // res.writeHead(200, {
-    //     "Set-Cookie": `jwt=${jwt};expires=1`,
-    //     "Content-Type": "text/plain",
-    //   });
-
-    res.setHeader("Set-Cookie", "jwt=${jwt};expires=1");
+    res.setHeader("Set-Cookie", `jwt=junk;max-age=0`);
     //res.setHeader("Content-Type", "text/plain");
 
-    res.redirect("/");
-    //res.end({status: "ok", redirect: "/"})
+    //res.redirect(301, "/");
+    res.end(JSON.stringify({ status: "OK", redirect: "/" }));
   }
 );
