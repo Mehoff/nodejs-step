@@ -80,36 +80,62 @@ export const getAllBooksApi = RoutesHandler.post(
 
       return res.end(JSON.stringify(books));
     });
-
-    // const books = await Book.find({ deleted: false });
-
-    // if (!books.length) {
-    //   return res.end(JSON.stringify({ error: "Failed to load books" }));
-    // }
-
-    // return res.end(JSON.stringify(books));
   }
 );
 
-export const getOwnBooksApi = RoutesHandler.get(
+export const getOwnBooksApi = RoutesHandler.post(
   "/books-api/own",
   [ensureAuthenticated],
   async (req, res) => {
-    const user = await getCurrentUser(req);
+    let data = "";
 
-    const books = await Book.find({ author: user._id, deleted: false });
+    req.on("data", (chunk) => {
+      data += chunk;
+    });
 
-    if (!books.length) {
-      return res.end(
-        JSON.stringify({
-          error: "У вас нет своих книг, либо вы не авторизованы",
-        })
-      );
-    }
+    req.on("end", async () => {
+      const page = JSON.parse(data).page;
+      const toSkip = BOOKS_PER_PAGE * (page - 1);
 
-    return res.end(JSON.stringify(books));
+      const user = await getCurrentUser(req);
+
+      console.log(user);
+
+      const count = await Book.count({ author: user, deleted: false });
+      if (count === 0) {
+        return res.end(JSON.stringify({ error: "У вас еще нет своих книг" }));
+      }
+
+      const books = await Book.find({ author: user, deleted: false })
+        .skip(toSkip)
+        .limit(BOOKS_PER_PAGE)
+        .sort("-uploadedAt");
+
+      if (!books.length)
+        return res.end(
+          JSON.stringify({
+            error: "Не удалось отобразить книги на этой странице",
+            page,
+          })
+        );
+
+      return res.end(JSON.stringify(books));
+    });
   }
 );
+// const user = await getCurrentUser(req);
+
+// const books = await Book.find({ author: user._id, deleted: false });
+
+// if (!books.length) {
+//   return res.end(
+//     JSON.stringify({
+//       error: "У вас нет своих книг, либо вы не авторизованы",
+//     })
+//   );
+// }
+
+// return res.end(JSON.stringify(books));
 
 export const getDeletedBooksApi = RoutesHandler.get(
   "/books-api/deleted",

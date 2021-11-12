@@ -41,16 +41,19 @@ export const fillDatabaseWithFixtures = async () => {
     {
       title: "Каштанка",
       description: "Описание каштанки",
+      author: IlliaId,
       path: "uploads\\kashtanka.jpg",
     },
     {
       title: "Каштанка 2",
       description: "Наконец-то вторая часть!",
+      author: IlliaId,
       path: "uploads\\kashtanka.jpg",
     },
     {
       title: "Каштанка 3. Возвращение",
       description: "Снова она же..",
+      author: MaxId,
       path: "uploads\\kashtanka.jpg",
     },
     {

@@ -11,7 +11,7 @@ export const getCurrentUser = async (req) => {
 
   if (id.error) return null;
 
-  const user = await User.findById(id);
+  const user = await User.findById(id.userId);
 
   return user;
 };
