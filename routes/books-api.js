@@ -34,7 +34,7 @@ export const getBooksApi = RoutesHandler.post(
         .sort("-uploadedAt");
 
       if (!books.length)
-        return res.end(JSON.stringify({ error: "Failed to load books" }));
+        return res.end(JSON.stringify({ error: "Failed to load books", page }));
 
       return res.end(JSON.stringify(books));
     });
@@ -76,7 +76,7 @@ export const getAllBooksApi = RoutesHandler.post(
         .sort("-uploadedAt");
 
       if (!books.length)
-        return res.end(JSON.stringify({ error: "Failed to load books" }));
+        return res.end(JSON.stringify({ error: "Failed to load books", page }));
 
       return res.end(JSON.stringify(books));
     });
@@ -100,7 +100,11 @@ export const getOwnBooksApi = RoutesHandler.get(
     const books = await Book.find({ author: user._id, deleted: false });
 
     if (!books.length) {
-      return res.end(JSON.stringify({ error: "Failed to load books" }));
+      return res.end(
+        JSON.stringify({
+          error: "У вас нет своих книг, либо вы не авторизованы",
+        })
+      );
     }
 
     return res.end(JSON.stringify(books));

@@ -44,9 +44,18 @@ function fillBooksByOption(option) {
   })
     .then((r) => r.json())
     .then((books) => {
+      console.log(books);
       clearContainer();
       if (books.error) {
-        alert("Для того чтобы получить доступ к своим книгам - авторизуйтесь");
+        alert(books.error);
+
+        if (books.page) {
+          if (books.page != 1) {
+            page = books.page - 1;
+            setCurrentPageText();
+            fillBooksByOption(option);
+          }
+        }
         return;
       }
       fillContainer(books);
