@@ -16,6 +16,7 @@ import {
   getOwnBooksApi,
   getDeletedBooksApi,
   deleteBooksApi,
+  reviveBooksApi,
 } from "./routes/books-api.js";
 import { getPrivate } from "./routes/private.js";
 import { getLogout } from "./routes/logout.js";
@@ -45,6 +46,7 @@ router.use(
   getOwnBooksApi,
   getDeletedBooksApi,
   deleteBooksApi,
+  reviveBooksApi,
   getPrivate,
   getLogout
 );
@@ -90,7 +92,7 @@ process.on("SIGINT", () => {
 // Add button to 'undo deletion' for deleted books
 // Save data about user log in timestamp +
 // Navbar +
-// Logout button
+// Logout button +
 // Pagination
 // Likes/Dislikes
 

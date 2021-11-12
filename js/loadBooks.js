@@ -1,8 +1,9 @@
 const filter = document.querySelector("#filter");
+let option = "all";
 
 filter.addEventListener("change", (e) => {
   //all, own, deleted
-  const option = e.target.value;
+  option = e.target.value;
 
   if (!option) option = "all";
 
@@ -75,16 +76,6 @@ const createBookElement = (book) => {
   const imageElement = document.createElement("img");
   const uploadedAtElement = document.createElement("small");
 
-  const buttonDel = createButton("Удалить", "link-secondary", () => {
-    console.log("Удалить" + book._id);
-
-    if (confirm(`Вы уверены что хотите удалить ${book.title}?`))
-      deleteBook(book._id);
-  });
-  const buttonEdit = createButton("Редактировать", "link-primary", () => {
-    console.log("Редактировать" + book._id);
-  });
-
   titleElement.innerText = book.title;
   descriptionElement.innerText = book.description;
   imageElement.src = book.path;
@@ -95,8 +86,30 @@ const createBookElement = (book) => {
   dataCol.appendChild(titleElement);
   dataCol.appendChild(descriptionElement);
   dataCol.appendChild(uploadedAtElement);
-  dataCol.appendChild(buttonEdit);
-  dataCol.appendChild(buttonDel);
+
+  if (option === "deleted") {
+    const buttonRevive = createButton("Восстановить", "link-primary", () => {
+      console.log("Восстановить" + book._id);
+
+      if (confirm(`Вы уверены что хотите восстановить ${book.title}?`))
+        reviveBook(book._id);
+    });
+
+    dataCol.appendChild(buttonRevive);
+  } else {
+    const buttonDel = createButton("Удалить", "link-secondary", () => {
+      console.log("Удалить" + book._id);
+
+      if (confirm(`Вы уверены что хотите удалить ${book.title}?`))
+        deleteBook(book._id);
+    });
+    const buttonEdit = createButton("Редактировать", "link-primary", () => {
+      console.log("Редактировать" + book._id);
+    });
+
+    dataCol.appendChild(buttonEdit);
+    dataCol.appendChild(buttonDel);
+  }
 
   div.appendChild(imageCol);
   div.appendChild(dataCol);
@@ -107,6 +120,25 @@ const createBookElement = (book) => {
 const deleteBook = async (bookId) => {
   const raw = await fetch("/books-api", {
     method: "DELETE",
+    body: JSON.stringify({ bookId }),
+  });
+
+  const response = await raw.json();
+
+  if (response) {
+    if (response.error) {
+      alert(response.error);
+    }
+    location.reload();
+  } else {
+    alert("Response is undefined");
+    console.log(response);
+  }
+};
+
+const reviveBook = async (bookId) => {
+  const raw = await fetch("/books-api/revive", {
+    method: "POST",
     body: JSON.stringify({ bookId }),
   });
 

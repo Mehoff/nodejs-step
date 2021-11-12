@@ -67,6 +67,33 @@ export const getDeletedBooksApi = RoutesHandler.get(
   }
 );
 
+export const reviveBooksApi = RoutesHandler.post(
+  "/books-api/revive",
+  null,
+  async (req, res) => {
+    let data = "";
+
+    req.on("data", (chunk) => {
+      data += chunk;
+    });
+
+    req.on("end", async () => {
+      const id = JSON.parse(data).bookId;
+      if (id) {
+        const result = await reviveBook(id);
+
+        if (result.err) {
+          return res.end(JSON.stringify({ error: "Failed to revive book" }));
+        }
+
+        return res.end(JSON.stringify({ message: "Successfully revive book" }));
+      } else {
+        return res.end(JSON.stringify({ error: "Failed to fetch book id" }));
+      }
+    });
+  }
+);
+
 export const deleteBooksApi = RoutesHandler.delete(
   "/books-api",
   null,
@@ -98,4 +125,8 @@ export const deleteBooksApi = RoutesHandler.delete(
 
 const deleteBook = async (id) => {
   return await Book.updateOne({ _id: id }, { $set: { deleted: true } });
+};
+
+const reviveBook = async (id) => {
+  return await Book.updateOne({ _id: id }, { $set: { deleted: false } });
 };
