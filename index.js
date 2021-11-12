@@ -94,9 +94,11 @@ process.on("SIGINT", () => {
 // Navbar +
 // Logout button +
 // Edit
-// Pagination
+// Pagination +
 // Likes/Dislikes
 // Comments
+
+// Hello, {username} at /home
 
 //    May be cool thing TODO:
 // req.user

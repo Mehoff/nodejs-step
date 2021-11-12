@@ -21,12 +21,12 @@ export const getBooksApi = RoutesHandler.post(
 
     req.on("end", async () => {
       const page = JSON.parse(data).page;
-
-      console.log("PAGE: " + page);
-
       const toSkip = BOOKS_PER_PAGE * (page - 1);
 
-      console.log("ToSkip: " + toSkip);
+      const count = await Book.count({ deleted: false });
+      if (count === 0) {
+        return res.end(JSON.stringify({ error: "Нет книг для отображения" }));
+      }
 
       const books = await Book.find({ deleted: false })
         .skip(toSkip)
@@ -38,14 +38,6 @@ export const getBooksApi = RoutesHandler.post(
 
       return res.end(JSON.stringify(books));
     });
-
-    // const books = await Book.find({ deleted: false });
-
-    // if (!books.length) {
-    //   return res.end(JSON.stringify({ error: "Failed to load books" }));
-    // }
-
-    // return res.end(JSON.stringify(books));
   }
 );
 
@@ -63,12 +55,12 @@ export const getAllBooksApi = RoutesHandler.post(
 
     req.on("end", async () => {
       const page = JSON.parse(data).page;
-
-      console.log("PAGE: " + page);
-
       const toSkip = BOOKS_PER_PAGE * (page - 1);
 
-      console.log("ToSkip: " + toSkip);
+      const count = await Book.count({ deleted: false });
+      if (count === 0) {
+        return res.end(JSON.stringify({ error: "Нет книг для отображения" }));
+      }
 
       const books = await Book.find({ deleted: false })
         .skip(toSkip)
@@ -99,8 +91,6 @@ export const getOwnBooksApi = RoutesHandler.post(
 
       const user = await getCurrentUser(req);
 
-      console.log(user);
-
       const count = await Book.count({ author: user, deleted: false });
       if (count === 0) {
         return res.end(JSON.stringify({ error: "У вас еще нет своих книг" }));
@@ -123,31 +113,41 @@ export const getOwnBooksApi = RoutesHandler.post(
     });
   }
 );
-// const user = await getCurrentUser(req);
 
-// const books = await Book.find({ author: user._id, deleted: false });
-
-// if (!books.length) {
-//   return res.end(
-//     JSON.stringify({
-//       error: "У вас нет своих книг, либо вы не авторизованы",
-//     })
-//   );
-// }
-
-// return res.end(JSON.stringify(books));
-
-export const getDeletedBooksApi = RoutesHandler.get(
+export const getDeletedBooksApi = RoutesHandler.post(
   "/books-api/deleted",
   null,
   async (req, res) => {
-    const books = await Book.find({ deleted: true });
+    let data = "";
 
-    if (!books.length) {
-      return res.end(JSON.stringify({ error: "Failed to load books" }));
-    }
+    req.on("data", (chunk) => {
+      data += chunk;
+    });
 
-    return res.end(JSON.stringify(books));
+    req.on("end", async () => {
+      const page = JSON.parse(data).page;
+      const toSkip = BOOKS_PER_PAGE * (page - 1);
+
+      const count = await Book.count({ deleted: true });
+      if (count === 0) {
+        return res.end(JSON.stringify({ error: "Нет удалённых книг" }));
+      }
+
+      const books = await Book.find({ deleted: true })
+        .skip(toSkip)
+        .limit(BOOKS_PER_PAGE)
+        .sort("-uploadedAt");
+
+      if (!books.length)
+        return res.end(
+          JSON.stringify({
+            error: "Не удалось отобразить книги на этой странице",
+            page,
+          })
+        );
+
+      return res.end(JSON.stringify(books));
+    });
   }
 );
 
