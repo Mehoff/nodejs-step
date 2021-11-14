@@ -80,7 +80,6 @@ export class RoutesHandler {
     } else {
       if (params) {
         const paramsObject = getParametersJson(req.url);
-        console.log("ParamsObjects:", paramsObject);
         if (paramsObject) requestedRoute.exec(req, res, paramsObject);
       } else {
         requestedRoute.exec(req, res);

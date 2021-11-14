@@ -33,7 +33,7 @@ const createCommentElement = (comment) => {
   const el = document.createElement("div");
 
   const name = document.createElement("h4");
-  name.textContent = comment.author;
+  name.textContent = comment.author.name;
 
   const text = document.createElement("span");
   text.textContent = comment.text;

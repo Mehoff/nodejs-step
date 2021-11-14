@@ -221,11 +221,12 @@ export const getBooksCommentBooksApi = RoutesHandler.post(
       try {
         const id = JSON.parse(data).bookId;
 
-        const book = await Book.findById(id).populate("comments").exec();
+        const book = await Book.findById(id).populate({
+          path: "comments",
+          populate: { path: "author", model: "user" },
+        });
 
         const comments = await book.comments;
-
-        console.log("Comments: ", comments);
 
         if (comments.length > 0) {
           return res.end(JSON.stringify(comments));
@@ -235,7 +236,7 @@ export const getBooksCommentBooksApi = RoutesHandler.post(
           );
         }
       } catch (err) {
-        console.log(err);
+        console.err(err);
         return res.end(
           JSON.stringify({ error: "Failed to fetch book comments" })
         );
