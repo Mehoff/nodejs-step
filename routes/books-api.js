@@ -207,6 +207,43 @@ export const deleteBooksApi = RoutesHandler.delete(
   }
 );
 
+export const getBooksCommentBooksApi = RoutesHandler.post(
+  "/books-api/comments",
+  null,
+  async (req, res) => {
+    let data = "";
+
+    req.on("data", (chunk) => {
+      data += chunk;
+    });
+
+    req.on("end", async () => {
+      try {
+        const id = JSON.parse(data).bookId;
+
+        const book = await Book.findById(id).populate("comments").exec();
+
+        const comments = await book.comments;
+
+        console.log("Comments: ", comments);
+
+        if (comments.length > 0) {
+          return res.end(JSON.stringify(comments));
+        } else {
+          return res.end(
+            JSON.stringify({ error: "Failed to fetch book comments" })
+          );
+        }
+      } catch (err) {
+        console.log(err);
+        return res.end(
+          JSON.stringify({ error: "Failed to fetch book comments" })
+        );
+      }
+    });
+  }
+);
+
 const deleteBook = async (id) => {
   return await Book.updateOne({ _id: id }, { $set: { deleted: true } });
 };

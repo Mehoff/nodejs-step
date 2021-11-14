@@ -1,5 +1,6 @@
 import fs from "fs";
 import { ContentTypeMap } from "./helpers/ContentTypeMap.js";
+import { getParametersJson } from "./helpers/UrlParser.js";
 
 export class Route {
   constructor(method, url, middleware, func) {
@@ -13,7 +14,7 @@ export class Route {
     }
   }
 
-  exec(req, res) {
+  exec(req, res, params = {}) {
     if (this.middleware) {
       for (const m of this.middleware) {
         const r = m(req, res);
@@ -21,7 +22,7 @@ export class Route {
       }
     }
 
-    if (this.func) this.func(req, res);
+    if (this.func) this.func(req, res, params);
   }
 }
 
@@ -51,8 +52,12 @@ export class RoutesHandler {
   }
 
   handle(req, res) {
+    const split = req.url.split("?");
+    const url = split[0];
+    const params = split[1];
+
     const requestedRoute = this.routes.find((route) => {
-      return route.url === req.url && route.method === req.method;
+      return route.url === url && route.method === req.method;
     });
 
     if (typeof requestedRoute === "undefined") {
@@ -73,7 +78,13 @@ export class RoutesHandler {
         });
       }
     } else {
-      requestedRoute.exec(req, res);
+      if (params) {
+        const paramsObject = getParametersJson(req.url);
+        console.log("ParamsObjects:", paramsObject);
+        if (paramsObject) requestedRoute.exec(req, res, paramsObject);
+      } else {
+        requestedRoute.exec(req, res);
+      }
     }
   }
 }

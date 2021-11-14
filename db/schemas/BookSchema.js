@@ -6,6 +6,7 @@ export const BookSchema = new mongoose.Schema({
   description: { type: String, required: true },
   author: { type: Schema.Types.ObjectId, ref: "user" },
   path: { type: String, required: true },
+  comments: { type: [Schema.Types.ObjectId], ref: "comment", default: [] },
   uploadedAt: { type: Number, default: Date.now() },
   deleted: { type: Boolean, default: false, select: false },
 });

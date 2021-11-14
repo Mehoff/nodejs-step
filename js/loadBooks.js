@@ -16,8 +16,6 @@ buttonPrevPageElement.addEventListener("click", (e) => {
 });
 
 buttonNextPageElement.addEventListener("click", (e) => {
-  // Todo, limit next page
-
   page += 1;
 
   setCurrentPageText();
@@ -126,8 +124,6 @@ const createBookElement = (book) => {
 
   if (option === "deleted") {
     const buttonRevive = createButton("Восстановить", "link-primary", () => {
-      console.log("Восстановить" + book._id);
-
       if (confirm(`Вы уверены что хотите восстановить ${book.title}?`))
         reviveBook(book._id);
     });
@@ -135,17 +131,22 @@ const createBookElement = (book) => {
     dataCol.appendChild(buttonRevive);
   } else {
     const buttonDel = createButton("Удалить", "link-secondary", () => {
-      console.log("Удалить" + book._id);
-
       if (confirm(`Вы уверены что хотите удалить ${book.title}?`))
         deleteBook(book._id);
     });
     const buttonEdit = createButton("Редактировать", "link-primary", () => {
-      console.log("Редактировать" + book._id);
+      console.log("Редактировать " + book._id);
     });
 
     dataCol.appendChild(buttonEdit);
     dataCol.appendChild(buttonDel);
+  }
+
+  if (book.comments) {
+    const buttonComments = createButton("Комментарии", "link-secondary", () => {
+      openBookComments(book._id);
+    });
+    dataCol.appendChild(buttonComments);
   }
 
   div.appendChild(imageCol);
@@ -195,4 +196,8 @@ const reviveBook = async (bookId) => {
 const clearContainer = () => {
   const booksElement = document.querySelector("#books-list");
   booksElement.innerHTML = "";
+};
+
+const openBookComments = (id) => {
+  window.location = `/comments?bookId=${id}`;
 };

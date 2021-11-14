@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { Book } from "../db/schemas/BookSchema.js";
 import { User } from "../db/schemas/UserSchema.js";
+import { Comment } from "../db/schemas/CommentSchema.js";
 import { encryptSync } from "../services/bcrypt.js";
 
 export const clearDatabaseData = async () => {
@@ -15,6 +16,28 @@ export const fillDatabaseWithFixtures = async () => {
   const IlliaId = mongoose.Types.ObjectId("123123123123");
   const MaxId = mongoose.Types.ObjectId("213213213213");
   const MatveyId = mongoose.Types.ObjectId("321321321321");
+
+  const commentId = mongoose.Types.ObjectId("444444444444");
+  const comment2Id = mongoose.Types.ObjectId("444444444445");
+  const comment3Id = mongoose.Types.ObjectId("444444444446");
+
+  const commentData = [
+    {
+      _id: commentId,
+      author: MaxId,
+      text: "Комментарий",
+    },
+    {
+      _id: comment2Id,
+      author: MatveyId,
+      text: "Второй комментарий",
+    },
+    {
+      _id: comment3Id,
+      author: IlliaId,
+      text: "Третий комментарий",
+    },
+  ];
 
   const userData = [
     {
@@ -37,12 +60,20 @@ export const fillDatabaseWithFixtures = async () => {
     },
   ];
 
+  // export const CommentSchema = new mongoose.Schema({
+  //   text: { type: String, minlength: "1", maxlength: 128 },
+  //   author: { type: Schema.Types.ObjectId, ref: "user" },
+  //   uploadedAt: { type: Number, default: Date.now() },
+  //   deleted: { type: Boolean, default: false, select: false },
+  // });
+
   const bookData = [
     {
       title: "Каштанка",
       description: "Описание каштанки",
       author: IlliaId,
       path: "uploads\\kashtanka.jpg",
+      comments: [commentId, comment2Id, comment3Id],
     },
     {
       title: "Каштанка 2",
@@ -73,6 +104,7 @@ export const fillDatabaseWithFixtures = async () => {
 
   try {
     await User.insertMany(userData);
+    await Comment.insertMany(commentData);
     await Book.insertMany(bookData);
 
     console.log("DB succesfully filled with data");
