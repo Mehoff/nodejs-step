@@ -236,7 +236,7 @@ export const getBooksCommentBooksApi = RoutesHandler.post(
           );
         }
       } catch (err) {
-        console.err(err);
+        console.error(err);
         return res.end(
           JSON.stringify({ error: "Failed to fetch book comments" })
         );
