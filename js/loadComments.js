@@ -31,6 +31,7 @@ document.addEventListener("DOMContentLoaded", async (e) => {
 
 const createCommentElement = (comment) => {
   const el = document.createElement("div");
+  el.className = "comment-element";
 
   const name = document.createElement("h4");
   name.textContent = comment.author.name;

@@ -16,7 +16,13 @@ textarea {
   transform: translate(-50%, -50%);
 }
 
-#action-toggler{
+#action-toggler {
   cursor: pointer;
   text-decoration: underline;
+}
+
+.comment-element {
+  padding: 5px;
+  border: 1px solid lightgrey;
+  margin-bottom: 3vh;
 }
