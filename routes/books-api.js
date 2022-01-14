@@ -2,6 +2,8 @@ import { RoutesHandler } from "../routeHandler.js";
 import { Book } from "../db/schemas/BookSchema.js";
 import { ensureAuthenticated } from "../middleware/ensureAuthenticated.js";
 import { getCurrentUser } from "../helpers/CurrentUser.js";
+import { readCookie } from "../services/cookies.js";
+import { verifyJwt } from "../services/jwt.js";
 
 //
 // TODO: add query and params support for RoutesHandler, and filter results in this route function
@@ -153,7 +155,7 @@ export const getDeletedBooksApi = RoutesHandler.post(
 
 export const reviveBooksApi = RoutesHandler.post(
   "/books-api/revive",
-  null,
+  [ensureAuthenticated],
   async (req, res) => {
     let data = "";
 
@@ -180,7 +182,7 @@ export const reviveBooksApi = RoutesHandler.post(
 
 export const deleteBooksApi = RoutesHandler.delete(
   "/books-api",
-  null,
+  [ensureAuthenticated],
   async (req, res) => {
     let data = "";
 
@@ -191,7 +193,22 @@ export const deleteBooksApi = RoutesHandler.delete(
     req.on("end", async () => {
       const id = JSON.parse(data).bookId;
       if (id) {
-        const result = await deleteBook(id);
+        // Get User Id
+        const jwt = readCookie(req, "jwt");
+        if (!jwt) {
+          return res.end(JSON.stringify({ error: "Not authenticated" }));
+        }
+        const userId = verifyJwt(jwt);
+
+        if (!userId) {
+          return res.end(JSON.stringify({ error: "Failed to verify jwt" }));
+        }
+
+        const result = await deleteBook(id, userId);
+
+        if (result === null) {
+          return res.end(JSON.stringify({ error: "Not enough rights" }));
+        }
 
         if (result.err) {
           return res.end(JSON.stringify({ error: "Failed to delete book" }));
@@ -245,8 +262,17 @@ export const getBooksCommentBooksApi = RoutesHandler.post(
   }
 );
 
-const deleteBook = async (id) => {
-  return await Book.updateOne({ _id: id }, { $set: { deleted: true } });
+const deleteBook = async (id, userId) => {
+  const book = await Book.findById(id);
+
+  console.log(`deleteBook()`, id, userId);
+  console.log(book.author);
+
+  if (book.author === userId) {
+    return await Book.updateOne({ _id: id }, { $set: { deleted: true } });
+  } else {
+    return null;
+  }
 };
 
 const reviveBook = async (id) => {
