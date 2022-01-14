@@ -42,7 +42,19 @@ const sendComment = (text, bookId) => {
         alert(res.error);
         return;
       }
+
+      console.log("RES:", res);
+
+      const comments = document.querySelector("#comments");
+      //const newComment = res.body;
+
+      //console.log(newComment);
+
+      const commentElement = createCommentElement(res);
+      comments.appendChild(commentElement);
+      // Add comment from response without page reloading
     });
 
-  location.reload();
+  // Delete later
+  // location.reload();
 };

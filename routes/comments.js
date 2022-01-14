@@ -48,6 +48,12 @@ export const postComments = RoutesHandler.post(
           console.log("Book:", book);
           return res.end(JSON.stringify({ error: "Failed to get book" }));
         }
+
+        const comment = await Comment.findById(newComment._id).populate(
+          "author"
+        );
+
+        return res.end(JSON.stringify(comment));
       } catch (err) {
         console.error(err);
         return res.end(JSON.stringify({ error: "Failed to post comment" }));

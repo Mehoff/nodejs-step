@@ -134,11 +134,11 @@ const createBookElement = (book) => {
       if (confirm(`Вы уверены что хотите удалить ${book.title}?`))
         deleteBook(book._id);
     });
-    const buttonEdit = createButton("Редактировать", "link-primary", () => {
-      console.log("Редактировать " + book._id);
-    });
+    // const buttonEdit = createButton("Редактировать", "link-primary", () => {
+    //   console.log("Редактировать " + book._id);
+    // });
 
-    dataCol.appendChild(buttonEdit);
+    // dataCol.appendChild(buttonEdit);
     dataCol.appendChild(buttonDel);
   }
 
